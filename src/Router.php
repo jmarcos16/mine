@@ -1,23 +1,17 @@
 <?php
 
-namespace Jmarcos16\Mine\Router;
+namespace Jmarcos16\Mine;
 
-use Jmarcos16\Mine\Exceptions\RouteNotFoundException;
-use Reflection;
-use Symfony\Component\DependencyInjection\Container;
+use Jmarcos16\Mine\Exceptions\RouterException;
 use Symfony\Component\HttpFoundation\Request;
 
 class Router
 {
     private array $routes = [];
-    private Container $container;
 
     public function __construct(
         array $controllers
     ) {
-
-        $this->container = new Container();
-
         if (!empty($controllers)) {
             foreach ($controllers as $controller) {
                 $this->addRoutesFromController($controller);
@@ -37,14 +31,13 @@ class Router
             }
         }
 
-        throw new RouteNotFoundException('Route not found');
+        throw new RouterException('Route not found', 404);
     }
 
     private function makeInstance($controller, string $actions, array $params)
     {
-        if($controller)
-        {
-            $instance =
+        if($controller){
+            
         }
     }
 

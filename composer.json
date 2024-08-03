@@ -16,7 +16,10 @@
         "psr-4": {
             "Jmarcos16\\Mine\\": "src/",
             "Jmarcos16\\Mine\\Tests\\": "tests/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "authors": [
         {
