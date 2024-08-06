@@ -1,6 +1,4 @@
 <?php
-
-use Jmarcos16\Mine\Exceptions\RouteNotFoundException;
 use Jmarcos16\Mine\Exceptions\RouterException;
 use Jmarcos16\Mine\Router;
 use Jmarcos16\Mine\Tests\Controllers\TestController;
