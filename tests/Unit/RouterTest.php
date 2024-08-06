@@ -1,65 +1,32 @@
 <?php
 
 use Jmarcos16\Mine\Exceptions\RouteNotFoundException;
-use Jmarcos16\Mine\Router\Router;
+use Jmarcos16\Mine\Exceptions\RouterException;
+use Jmarcos16\Mine\Router;
 use Jmarcos16\Mine\Tests\Controllers\TestController;
 use Symfony\Component\HttpFoundation\Request;
 
-it('should add a route', function () {
-    $router = new Router(
-        controllers: [
-            new TestController(),
-        ]
-    );
+it('cannot find a route', function () {
+    $router = new Router([TestController::class]);
+    $request = Request::create('/not-found', 'GET');
 
-    $routes = $router->getRoutes();
-
-    expect($routes)->toHaveCount(1);
-    expect($routes['/test']['controller'])->toBeInstanceOf(TestController::class);
-    expect($routes['/test']['actions'])->toBe('index');
-});
-
-it('should be able to get the methods of a route', function () {
-    $router = new Router(
-        controllers: [
-            new TestController(),
-        ]
-    );
-
-    $routes = $router->getRoutes();
-
-    expect($routes['/test']['methods'])->toBe(['GET']);
-});
-
-it('should throw an exception when the route is not found', function () {
-    $router = new Router(
-        controllers: [
-            new TestController(),
-        ]
-    );
-
-    $request = new Symfony\Component\HttpFoundation\Request();
-    $request->server->set('REQUEST_URI', '/not-found');
-    $request->setMethod('GET');
-
-    $this->expectException(RouteNotFoundException::class);
     $router->handle($request);
-});
+})->throws(RouterException::class, 'Route not found');
 
-it('should be able resolve params {param} in the route', function () {
-    $router = new Router(
-        controllers: [
-            new TestController(),
-        ]
-    );
+it('cannot call a controller that does not exist', function () {
+    new Router(['Not\Found\Controller']);
+})->throws(RouterException::class, 'Controller not found');
 
-    $request = new Request();
-    $request->server->set('REQUEST_URI', '/test/1');
-    $request->setMethod('GET');
+it('cannot call a controller route that does not exist', function () {
+    $router = new Router([TestController::class]);
+    $request = Request::create('/not-found', 'GET');
 
-    $controller = $router->handle($request);
+    $router->handle($request);
+})->throws(RouterException::class, 'Route not found');
 
-    // dd($controller->getParams());
+it('should call a controller route', function () {
+    $router = new Router([TestController::class]);
+    $request = Request::create('/test', 'GET');
 
-    // expect($controller->getParams())->toBe(['id' => 1]);
-});
+    $router->handle($request);
+})->expectOutputString('Hello from TestController');

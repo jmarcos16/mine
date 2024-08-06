@@ -2,12 +2,14 @@
 
 namespace Jmarcos16\Mine;
 
+use DI\Container;
 use Jmarcos16\Mine\Exceptions\RouterException;
 use Symfony\Component\HttpFoundation\Request;
 
 class Router
 {
     private array $routes = [];
+    private Container $container;
 
     public function __construct(
         array $controllers
@@ -17,6 +19,8 @@ class Router
                 $this->addRoutesFromController($controller);
             }
         }
+
+        $this->container = new Container();
     }
 
     public function handle(Request $request)
@@ -34,11 +38,23 @@ class Router
         throw new RouterException('Route not found', 404);
     }
 
-    private function makeInstance($controller, string $actions, array $params)
+    private function makeInstance(string $controller, string $actions, array $params)
     {
-        if($controller){
-            
+        if (!method_exists($controller, $actions)) {
+            throw new RouterException('Action not found', 404);
         }
+        
+        $reflection = new \ReflectionMethod($controller, $actions);
+        $parameters = [];
+
+        foreach ($reflection->getParameters() as $index => $parameter) {
+            $dependency = $parameter->getType();
+            if ($dependency instanceof \ReflectionNamedType && !$dependency->isBuiltin()) {
+                $parameters[] = $this->container->get($dependency->getName());
+            }
+        }
+
+        $this->container->call([$controller, $actions], array_merge($parameters, $params));
     }
 
     private function matchRoute(string $path, string $uri, &$params): bool
@@ -57,6 +73,11 @@ class Router
 
     private function addRoutesFromController($controller)
     {
+
+        if(!class_exists($controller)){
+            throw new RouterException('Controller not found', 404);
+        }
+
         $reflection = new \ReflectionClass($controller);
 
         $actions = $reflection->getMethods();
