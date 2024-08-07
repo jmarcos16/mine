@@ -3,6 +3,7 @@
 namespace Jmarcos16\Mine;
 
 use DI\Container;
+use Jmarcos16\Mine\Attribute\Route;
 use Jmarcos16\Mine\Exceptions\RouterException;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -28,8 +29,12 @@ class Router
         $uri    = $request->getPathInfo();
         $method = $request->getMethod();
 
-        foreach ($this->routes as $key => $route) {
-            if(in_array($method, $route['methods']) && $this->matchRoute($key, $uri, $params)) {
+        if(!isset($this->routes[$method])){
+            throw new RouterException('Route not found', 404);
+        }
+
+        foreach ($this->routes[$method] as $key => $route) {
+            if ($this->matchRoute($key, $uri, $params)) {
                 $this->makeInstance($route['controller'], $route['actions'], $params);
                 return;
             }
@@ -51,10 +56,12 @@ class Router
             $dependency = $parameter->getType();
             if ($dependency instanceof \ReflectionNamedType && !$dependency->isBuiltin()) {
                 $parameters[] = $this->container->get($dependency->getName());
+            } else {
+                $parameters[] = array_shift($params);
             }
         }
-
-        $this->container->call([$controller, $actions], array_merge($parameters, $params));
+        
+        $this->container->call([$controller, $actions], array_merge($parameters));
     }
 
     private function matchRoute(string $path, string $uri, &$params): bool
@@ -86,7 +93,7 @@ class Router
             $attributes = $actions->getAttributes();
 
             foreach ($attributes as $attribute) {
-                if ($attribute->getName() === 'Jmarcos16\Mine\Attribute\Route') {
+                if ($attribute->getName() === Route::class) {
                     $route = $attribute->newInstance();
                     $this->addRoute($route->getUri(), $controller, $actions->getName(), $route->getMethods());
                 }
@@ -96,11 +103,12 @@ class Router
 
     private function addRoute(string $uri, $controller, string $actions, array $methods = ['GET']): void
     {
-        $this->routes[$uri] = [
-            'controller' => $controller,
-            'actions'    => $actions,
-            'methods'    => $methods,
-        ];
+        foreach ($methods as $method) {
+            $this->routes[$method][$uri] = [
+                'controller' => $controller,
+                'actions'    => $actions,
+            ];
+        }
     }
 
     public function getRoutes(): array

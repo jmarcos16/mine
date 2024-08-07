@@ -9,7 +9,7 @@ final readonly class Route
 {
     public function __construct(
         protected string $uri,
-        protected ?array $methods = ['GET'],
+        protected array|string $methods = ['GET'],
     ) {
     }
 
@@ -18,8 +18,8 @@ final readonly class Route
         return $this->uri;
     }
 
-    public function getMethods(): ?array
+    public function getMethods(): array
     {
-        return $this->methods;
+        return is_array($this->methods) ? $this->methods : [$this->methods];
     }
 }

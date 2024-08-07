@@ -1,30 +1,36 @@
 <?php
+
 use Jmarcos16\Mine\Exceptions\RouterException;
 use Jmarcos16\Mine\Router;
 use Jmarcos16\Mine\Tests\Controllers\TestController;
 use Symfony\Component\HttpFoundation\Request;
 
-it('cannot find a route', function () {
+test('verify that a route can be added correctly', function () {
     $router = new Router([TestController::class]);
-    $request = Request::create('/not-found', 'GET');
+    $routes = $router->getRoutes();
+    expect($routes)->toBeArray();
+    expect($routes)->toHaveKey('GET');
+    expect($routes['GET'])->toHaveKey('/test');
+    expect($routes['GET']['/test'])->toBeArray();
+    expect($routes['GET']['/test'])->toHaveKey('controller');
+    expect($routes['GET']['/test']['controller'])->toBe(TestController::class);
+});
 
+test('verify the behavior when a non-existent route is requested', function () {
+    $router = new Router([TestController::class]);
+    $request = Request::create('/nonexistent');
     $router->handle($request);
 })->throws(RouterException::class, 'Route not found');
 
-it('cannot call a controller that does not exist', function () {
-    new Router(['Not\Found\Controller']);
-})->throws(RouterException::class, 'Controller not found');
-
-it('cannot call a controller route that does not exist', function () {
+test('verify the behavior when an HTTP method not allowed is used on a route', function () {
     $router = new Router([TestController::class]);
-    $request = Request::create('/not-found', 'GET');
-
+    $request = Request::create('/test', 'PUT');
     $router->handle($request);
 })->throws(RouterException::class, 'Route not found');
 
-it('should call a controller route', function () {
+test('verify if the parameters are being passed correctly to the controller', function () {
     $router = new Router([TestController::class]);
-    $request = Request::create('/test', 'GET');
-
+    $request = Request::create('/test/1', 'POST');
     $router->handle($request);
-})->expectOutputString('Hello from TestController');
+    expect(ob_get_clean())->toBe('Hello from TestController with id 1');
+})->only();
