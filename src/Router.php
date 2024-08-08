@@ -1,10 +1,10 @@
 <?php
 
-namespace Jmarcos16\Mine;
+namespace Jmarcos16\RouterMine;
 
 use DI\Container;
-use Jmarcos16\Mine\Attribute\Route;
-use Jmarcos16\Mine\Exceptions\RouterException;
+use Jmarcos16\RouterMine\Exceptions\RouterException;
+use Jmarcos16\RouterMine\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 class Router

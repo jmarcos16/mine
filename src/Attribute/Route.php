@@ -1,6 +1,6 @@
 <?php
 
-namespace Jmarcos16\Mine\Attribute;
+namespace Jmarcos16\RouterMine\Attribute;
 
 use Attribute;
 

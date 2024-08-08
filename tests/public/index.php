@@ -1,20 +1,16 @@
 <?php
 
-use Jmarcos16\Mine\Router;
+use Jmarcos16\Mine\Tests\Controllers\TestController;
+use Jmarcos16\RouterMine\Router;
 use Symfony\Component\HttpFoundation\Request;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-if(!file_exists(base_path('config/config.php'))){
-    throw new Exception('Config file not found');
-}
+$routes = [
+    TestController::class,
+];
 
-$config = require base_path('config/config.php');
+$router = new Router($routes);
 
-if(!isset($config['controllers'])){
-    throw new Exception('Controllers not found');
-}
-
-$router = new Router($config['controllers']);
 $router->handle(Request::createFromGlobals());
 

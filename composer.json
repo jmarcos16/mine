@@ -1,6 +1,6 @@
 {
     "name": "jmarcos16/mine",
-    "description": "Mine project for api",
+    "description": "Router Mine project",
     "type": "library",
     "require": {
         "symfony/http-foundation": "^7.1",
@@ -8,14 +8,15 @@
     },
     "require-dev": {
         "symfony/var-dumper": "^7.1",
-        "pestphp/pest": "^2.34",
-        "laravel/pint": "^1.17"
+        "laravel/pint": "^1.17",
+        "phpstan/phpstan": "^1.11",
+        "phpunit/phpunit": "^11"
     },
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Jmarcos16\\Mine\\": "src/",
-            "Jmarcos16\\Mine\\Tests\\": "tests/"
+            "Jmarcos16\\RouterMine\\": "src/",
+            "Jmarcos16\\RouterMine\\Tests\\": "tests/"
         },
         "files": [
             "src/helpers.php"
@@ -33,6 +34,13 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/pest"
+        "test": "./vendor/bin/phpunit tests",
+        "stan": "vendor/bin/phpstan analyse src tests --level 6",
+        "pint": "vendor/bin/pint",
+        "analyze": [
+            "@stan",
+            "@test",
+            "@pint"
+        ]
     }
 }
