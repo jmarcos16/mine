@@ -34,7 +34,7 @@
         }
     },
     "scripts": {
-        "test": "./vendor/bin/phpunit tests",
+        "test": "./vendor/bin/phpunit --testdox tests --colors=always",
         "stan": "vendor/bin/phpstan analyse src tests --level 6",
         "pint": "vendor/bin/pint",
         "analyze": [
