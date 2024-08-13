@@ -1,6 +1,6 @@
 <?php
 
-namespace Jmarcos16\RouterMine\Attribute;
+namespace Jmarcos16\MiniRouter\Attribute;
 
 use Attribute;
 

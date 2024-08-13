@@ -1,6 +1,6 @@
 <?php
 
-namespace Jmarcos16\RouterMine\Exceptions;
+namespace Jmarcos16\MiniRouter\Exceptions;
 
 use Exception;
 

@@ -1,8 +1,10 @@
 {
-    "name": "jmarcos16/router-mine",
-    "description": "Router Mine project",
+    "name": "jmarcos16/mine-router",
+    "description": "Mini Router project",
     "type": "library",
+    "version": "0.3.0-alpha",
     "require": {
+        "php": "^8.0",
         "symfony/http-foundation": "^7.1",
         "php-di/php-di": "^7.0"
     },
@@ -14,8 +16,8 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Jmarcos16\\RouterMine\\": "src/",
-            "Jmarcos16\\RouterMine\\Tests\\": "tests/"
+            "Jmarcos16\\MiniRouter\\": "src/",
+            "Jmarcos16\\MiniRouter\\Tests\\": "tests/"
         },
         "files": [
             "src/helpers.php"
@@ -27,11 +29,6 @@
             "email": "contato.marcosrf@gmail.com"
         }
     ],
-    "config": {
-        "allow-plugins": {
-            "pestphp/pest-plugin": true
-        }
-    },
     "scripts": {
         "test": "./vendor/bin/phpunit --testdox tests --colors=always",
         "stan": "vendor/bin/phpstan analyse src tests --level 6",

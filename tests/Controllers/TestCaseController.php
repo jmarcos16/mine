@@ -1,8 +1,8 @@
 <?php
 
-namespace Jmarcos16\RouterMine\Tests\Controllers;
+namespace Jmarcos16\MiniRouter\Tests\Controllers;
 
-use Jmarcos16\RouterMine\Attribute\Route;
+use Jmarcos16\MiniRouter\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 class TestCaseController
