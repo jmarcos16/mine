@@ -1,8 +1,7 @@
 {
-    "name": "jmarcos16/mine-router",
-    "description": "Mini Router project",
+    "name": "jmarcos16/mini-router",
+    "description": "Mini Router for PHP",
     "type": "library",
-    "version": "0.3.0-alpha",
     "require": {
         "php": "^8.0",
         "symfony/http-foundation": "^7.1",
