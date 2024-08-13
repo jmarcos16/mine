@@ -29,17 +29,17 @@ $router = new Router($routes);
 $router->handle(Request::createFromGlobals());
 ```
 
-In the `TestCaseController` class, you must create a method with the `#[Route]` attribute, as shown below:
+In the `YourController` class, you must create a method with the `#[Route]` attribute, as shown below:
 
 ```php
 use RouterMine\Attributes\Route;
 
-class TestCaseController
+class YourController
 {
-    #[Route('/test')]
-    public function test()
+    #[Route('/index')]
+    public function index()
     {
-        return 'Hello World';
+        return echo 'Hello World';
     }
 }
 ```
