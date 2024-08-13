@@ -1,9 +1,9 @@
 <?php
 
-namespace Jmarcos16\RouterMine\Tests;
+namespace Jmarcos16\MiniRouter\Tests;
 
-use Jmarcos16\RouterMine\Router;
-use Jmarcos16\RouterMine\Tests\Controllers\TestCaseController;
+use Jmarcos16\MiniRouter\Router;
+use Jmarcos16\MiniRouter\Tests\Controllers\TestCaseController;
 use PHPUnit\Framework\TestCase as FrameworkTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
