@@ -15,12 +15,13 @@ if(!function_exists('base_path')) {
 /**
  * Dump and die
  *
- * @param mixed $data
+ * @param mixed ...$params
  */
 if(!function_exists('dd')) {
-    function dd(...$params): void
+    function dd(...$params): void //@phpstan-ignore-line
     {
         var_dump(...$params);
+
         die();
     }
 }

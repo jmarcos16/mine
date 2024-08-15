@@ -7,15 +7,19 @@ use Jmarcos16\MiniRouter\Exceptions\RouterException;
 
 class RegisterRouter
 {
-
+    /**
+     * @var array<string, array<string, array<string, string>>> $routes
+     */
     private array $routes = [];
 
+    /**
+     * @param array<string> $controllers
+     */
     public function __construct(
         protected array $controllers = []
     ) {
         $this->registerRoutes();
     }
-
 
     private function registerRoutes(): void
     {
@@ -78,5 +82,4 @@ class RegisterRouter
         return $this->routes;
     }
 
-    
 }

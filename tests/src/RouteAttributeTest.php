@@ -9,7 +9,7 @@ class RouteAttributeTest extends TestCase
 {
     public function testItShouldReturnRouteAttribute(): void
     {
-        $class = new class {
+        $class = new class () {
             #[Route('/home')]
             public function index(): string
             {
@@ -17,9 +17,8 @@ class RouteAttributeTest extends TestCase
             }
         };
 
-
         $reflection = new \ReflectionClass($class);
-        $method = $reflection->getMethod('index');
+        $method     = $reflection->getMethod('index');
 
         $attributes = $method->getAttributes(Route::class);
         $this->assertCount(1, $attributes);
@@ -30,16 +29,16 @@ class RouteAttributeTest extends TestCase
 
     public function testItShouldReturnRouteAttributeWithMethods(): void
     {
-        $class = new class {
+        $class = new class () {
             #[Route('/home', ['GET', 'POST'])]
-            public function index(): string 
+            public function index(): string
             {
                 return 'Hello World';
             }
         };
 
         $reflection = new \ReflectionClass($class);
-        $method = $reflection->getMethod('index');
+        $method     = $reflection->getMethod('index');
 
         $attributes = $method->getAttributes(Route::class);
         $this->assertCount(1, $attributes);
@@ -50,7 +49,7 @@ class RouteAttributeTest extends TestCase
 
     public function testItShouldReturnRouteAttributeWithName(): void
     {
-        $class = new class {
+        $class = new class () {
             #[Route('/home', name: 'home')]
             public function index(): string
             {
@@ -59,7 +58,7 @@ class RouteAttributeTest extends TestCase
         };
 
         $reflection = new \ReflectionClass($class);
-        $method = $reflection->getMethod('index');
+        $method     = $reflection->getMethod('index');
 
         $attributes = $method->getAttributes(Route::class);
         $this->assertCount(1, $attributes);
@@ -70,7 +69,7 @@ class RouteAttributeTest extends TestCase
 
     public function testItShouldReturnRouteAttributeWithAllParameters(): void
     {
-        $class = new class {
+        $class = new class () {
             #[Route('/home', ['GET', 'POST'], name: 'home')]
             public function index(): string
             {
@@ -79,7 +78,7 @@ class RouteAttributeTest extends TestCase
         };
 
         $reflection = new \ReflectionClass($class);
-        $method = $reflection->getMethod('index');
+        $method     = $reflection->getMethod('index');
 
         $attributes = $method->getAttributes(Route::class);
         $this->assertCount(1, $attributes);
@@ -91,4 +90,3 @@ class RouteAttributeTest extends TestCase
     }
 
 }
-

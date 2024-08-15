@@ -3,7 +3,6 @@
 namespace Jmarcos16\MiniRouter;
 
 use DI\Container;
-use Jmarcos16\MiniRouter\Attribute\Route;
 use Jmarcos16\MiniRouter\Exceptions\RouterException;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -37,6 +36,7 @@ class Router extends RegisterRouter
         foreach ($routes[$method] as $key => $route) {
             if ($this->matchRoute($key, $uri, $params)) {
                 $this->makeInstance($route['controller'], $route['actions'], $params);
+
                 return;
             }
         }
@@ -76,7 +76,7 @@ class Router extends RegisterRouter
      * @param string $path
      * @param string $uri
      * @param array<mixed> $params
-     * 
+     *
      * @return bool
      */
     private function matchRoute(string $path, string $uri, &$params): bool

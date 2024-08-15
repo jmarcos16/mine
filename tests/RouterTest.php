@@ -12,17 +12,17 @@ class RouterTest extends FrameworkTestCase
 {
     public function testItShouldReturnHelloFromTestControllerInDefaultRoute(): void
     {
-        
-        $controller = new class {
+
+        $controller = new class () {
             #[Route(uri: '/default-route', methods: ['GET'])]
             public function defaultRoute(): void
             {
                 echo 'Hello from TestController in default route';
             }
-        };       
+        };
         $request = Request::create('/default-route', 'GET');
 
-        $router  = new Router([$controller::class]);
+        $router = new Router([$controller::class]);
         $router->handle($request);
         $this->expectOutputString('Hello from TestController in default route');
     }
@@ -30,7 +30,7 @@ class RouterTest extends FrameworkTestCase
     public function testItShouldReturnHelloFromTestControllerWithId1(): void
     {
 
-        $controller = new class {
+        $controller = new class () {
             #[Route(uri: '/with-params/{id}', methods: ['GET'])]
             public function withParams(int $id): void
             {
@@ -39,7 +39,7 @@ class RouterTest extends FrameworkTestCase
         };
         $request = Request::create('/with-params/1', 'GET');
 
-        $router  = new Router([$controller::class]);
+        $router = new Router([$controller::class]);
         $router->handle($request);
         $this->expectOutputString('Hello from TestController with id 1');
     }
@@ -47,7 +47,7 @@ class RouterTest extends FrameworkTestCase
     public function testItShouldReturnRouteNotFound(): void
     {
 
-        $controller = new class {
+        $controller = new class () {
             #[Route(uri: '/valid-route', methods: ['GET'])]
             public function withParams(int $id): void
             {
@@ -65,7 +65,7 @@ class RouterTest extends FrameworkTestCase
     public function testItShouldReturnHelloFromTestControllerWithId1AndNameMarcos(): void
     {
 
-        $controller = new class {
+        $controller = new class () {
             #[Route(uri: '/multiple-params/{id}/{name}', methods: ['GET'])]
             public function multipleParams(int $id, string $name): void
             {
@@ -82,7 +82,7 @@ class RouterTest extends FrameworkTestCase
     public function testItShouldReturnHelloFromTestControllerInDefaultRouteWithMethodPost(): void
     {
 
-        $controller = new class {
+        $controller = new class () {
             #[Route(uri: '/default-route', methods: ['POST'])]
             public function defaultRoute(): void
             {
@@ -90,8 +90,8 @@ class RouterTest extends FrameworkTestCase
             }
         };
         $request = Request::create('/default-route', 'POST');
-        
-        $router  = new Router([$controller::class]);
+
+        $router = new Router([$controller::class]);
         $router->handle($request);
         $this->expectOutputString('Hello from TestController in default route with method POST');
     }
@@ -106,14 +106,13 @@ class RouterTest extends FrameworkTestCase
 
     public function testItShouldReturnHelloFromTestControllerWithMultipleMethods(): void
     {
-        $controller = new class {
+        $controller = new class () {
             #[Route(uri: '/multiple-methods', methods: ['GET', 'POST'])]
             public function multipleMethods(): void
             {
                 echo 'Hello from TestController with multiple methods';
             }
         };
-
 
         $request = Request::create('/multiple-methods', 'GET');
         $router  = new Router([$controller::class]);
