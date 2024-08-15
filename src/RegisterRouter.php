@@ -19,8 +19,8 @@ class RegisterRouter
 
     private function registerRoutes(): void
     {
-        if (!empty($controllers)) {
-            foreach ($controllers as $controller) {
+        if (!empty($this->controllers)) {
+            foreach ($this->controllers as $controller) {
                 $this->addRoutesFromController($controller);
             }
         }

@@ -28,6 +28,8 @@ class Router extends RegisterRouter
         $uri    = $request->getPathInfo();
         $method = $request->getMethod();
 
+        $routes = $this->getRoutes();
+
         if(!isset($routes[$method])) {
             throw new RouterException('Route not found', 404);
         }
@@ -74,6 +76,8 @@ class Router extends RegisterRouter
      * @param string $path
      * @param string $uri
      * @param array<mixed> $params
+     * 
+     * @return bool
      */
     private function matchRoute(string $path, string $uri, &$params): bool
     {
@@ -83,7 +87,8 @@ class Router extends RegisterRouter
         if (!preg_match($regex, $uri, $matches)) {
             return false;
         }
-
         $params = array_slice($matches, 1);
+
+        return true;
     }
 }
