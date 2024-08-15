@@ -37,8 +37,8 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
+    - name: Run test with PHPUnit
+      run: ./vendor/bin/phpunit tests --no-output
 
-    - name: Run test suite and static analysis
-      run: composer analizy
+    - name: Run PHPStan
+      run: ./vendor/bin/phpstan analyse src --level=6
