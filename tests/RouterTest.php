@@ -3,6 +3,7 @@
 namespace Jmarcos16\MiniRouter\Tests;
 
 use Jmarcos16\MiniRouter\Attribute\Route;
+use Jmarcos16\MiniRouter\Request as MiniRouterRequest;
 use Jmarcos16\MiniRouter\Router;
 use Jmarcos16\MiniRouter\Tests\Controllers\TestCaseController;
 use PHPUnit\Framework\TestCase as FrameworkTestCase;
@@ -14,16 +15,18 @@ class RouterTest extends FrameworkTestCase
     {
 
         $controller = new class () {
-            #[Route(uri: '/default-route', methods: ['GET'])]
+            #[Route(uri: '/default-route', methods: ['POST'])]
             public function defaultRoute(): void
             {
                 echo 'Hello from TestController in default route';
             }
         };
-        $request = Request::create('/default-route', 'GET');
+        
+        Request::create('/default-route', 'GET');
+
 
         $router = new Router([$controller::class]);
-        $router->handle($request);
+        $router->handle();
         $this->expectOutputString('Hello from TestController in default route');
     }
 
