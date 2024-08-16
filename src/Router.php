@@ -3,15 +3,11 @@
 namespace Jmarcos16\MiniRouter;
 
 use DI\Container;
-use Jmarcos16\MiniRouter\Attribute\Route;
 use Jmarcos16\MiniRouter\Exceptions\RouterException;
 use Symfony\Component\HttpFoundation\Request;
 
-class Router
+class Router extends RegisterRouter
 {
-    /** @var array<string, array<string, array<string, string>>> $routes */
-    private array $routes = [];
-
     private Container $container;
 
     /**
@@ -20,11 +16,8 @@ class Router
     public function __construct(
         array $controllers
     ) {
-        if (!empty($controllers)) {
-            foreach ($controllers as $controller) {
-                $this->addRoutesFromController($controller);
-            }
-        }
+
+        parent::__construct($controllers);
 
         $this->container = new Container();
     }
@@ -34,11 +27,13 @@ class Router
         $uri    = $request->getPathInfo();
         $method = $request->getMethod();
 
-        if(!isset($this->routes[$method])) {
+        $routes = $this->getRoutes();
+
+        if(!isset($routes[$method])) {
             throw new RouterException('Route not found', 404);
         }
 
-        foreach ($this->routes[$method] as $key => $route) {
+        foreach ($routes[$method] as $key => $route) {
             if ($this->matchRoute($key, $uri, $params)) {
                 $this->makeInstance($route['controller'], $route['actions'], $params);
 
@@ -81,6 +76,8 @@ class Router
      * @param string $path
      * @param string $uri
      * @param array<mixed> $params
+     *
+     * @return bool
      */
     private function matchRoute(string $path, string $uri, &$params): bool
     {
@@ -90,61 +87,8 @@ class Router
         if (!preg_match($regex, $uri, $matches)) {
             return false;
         }
-
         $params = array_slice($matches, 1);
 
         return true;
-    }
-
-    /**
-     * @param string $controller
-     */
-    private function addRoutesFromController($controller): void
-    {
-
-        if(!class_exists($controller)) {
-            throw new RouterException('Controller not found', 404);
-        }
-
-        $reflection = new \ReflectionClass($controller);
-
-        $actions = $reflection->getMethods();
-
-        foreach ($actions as $actions) {
-            $attributes = $actions->getAttributes();
-
-            foreach ($attributes as $attribute) {
-                if ($attribute->getName() === Route::class) {
-                    $route = $attribute->newInstance();
-                    $this->addRoute($route->getUri(), $controller, $actions->getName(), $route->getMethods());
-                }
-            }
-        }
-    }
-
-    /**
-     * @param string $uri
-     * @param string $controller
-     * @param string $actions
-     * @param array<string> $methods
-     */
-    private function addRoute(string $uri, string $controller, string $actions, array $methods = ['GET']): void
-    {
-        foreach ($methods as $method) {
-            $this->routes[$method][$uri] = [
-                'controller' => $controller,
-                'actions'    => $actions,
-            ];
-        }
-    }
-
-    /**
-     * Get the value of routes
-     *
-     * @return array<string, array<string, array<string, string>>> $routes
-     */
-    public function getRoutes(): array
-    {
-        return $this->routes;
     }
 }

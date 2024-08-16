@@ -11,3 +11,17 @@ if(!function_exists('base_path')) {
         return __DIR__ . '/../' . ($path ? DIRECTORY_SEPARATOR . $path : $path);
     }
 }
+
+/**
+ * Dump and die
+ *
+ * @param mixed ...$params
+ */
+if(!function_exists('dd')) {
+    function dd(...$params): void //@phpstan-ignore-line
+    {
+        var_dump(...$params);
+
+        die();
+    }
+}
