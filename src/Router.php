@@ -4,7 +4,6 @@ namespace Jmarcos16\MiniRouter;
 
 use DI\Container;
 use Jmarcos16\MiniRouter\Exceptions\RouterException;
-use Jmarcos16\MiniRouter\Facade\Request as FacadeRequest;
 use Jmarcos16\MiniRouter\RegisterRouter;
 use Jmarcos16\MiniRouter\Request;
 
@@ -22,18 +21,19 @@ class Router extends RegisterRouter
         $this->container = new Container();
     }
 
-    public function handle(): void
+    public function handle(?Request $request = null): void
     {
         /**
-         * @var Request $request
+         * @var Request $requests
          */
-        $request = Request::capture();
+        $request = $request ?? Request::capture();
+        $routes = $this->getRoutes();
 
-        if(!isset($routes[$request->method()])) {
+        if(!isset($routes[$request->getMethod()])) {
             throw new RouterException('Route not found', 404);
         }
 
-        foreach ($routes[$request->method()] as $key => $route) {
+        foreach ($routes[$request->getMethod()] as $key => $route) {
             if ($this->matchRoute($key, $request->uri(), $params)) {
                 $this->makeInstance($route['controller'], $route['actions'], $params);
                 return;

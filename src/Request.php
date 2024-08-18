@@ -42,23 +42,13 @@ class Request extends HttpFoundationRequest
     }
 
     /**
-     * Get the request method.
-     *
-     * @return string
-     */
-    public function method(): string
-    {
-        return $this->getMethod();
-    }
-
-    /**
      * Get the request URI.
      *
      * @return string
      */
     public function uri(): string
     {
-        return rtrim(preg_replace('/\?.*/', '', $this->getUri()), '/');
+        return rtrim(preg_replace('/\?.*/', '', $this->getRequestUri()), '/');
     }
 
     /**
