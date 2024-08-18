@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace Jmarcos16\MiniRouter;
+
 /**
  * Get the base path of the project
  *
@@ -20,6 +24,13 @@ if(!function_exists('base_path')) {
 if(!function_exists('dd')) {
     function dd(...$params): void //@phpstan-ignore-line
     {
+
+        $trace = debug_backtrace();
+        $file  = $trace[0]['file'];
+        $line  = $trace[0]['line'];
+
+        echo "File: $file" . PHP_EOL;
+        echo "Line: $line" . PHP_EOL;
         var_dump(...$params);
 
         die();
