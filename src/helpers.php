@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace Jmarcos16\MiniRouter;
+
 /**
  * Get the base path of the project
  *
