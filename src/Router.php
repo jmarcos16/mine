@@ -14,7 +14,6 @@ class Router extends RegisterRouter
     public function __construct(
         array $controllers
     ) {
-
         parent::__construct($controllers);
         $this->container = new Container();
     }
