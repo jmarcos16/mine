@@ -4,12 +4,10 @@ namespace Jmarcos16\MiniRouter;
 
 use DI\Container;
 use Jmarcos16\MiniRouter\Exceptions\RouterException;
-use Symfony\Component\HttpFoundation\Request;
 
 class Router extends RegisterRouter
 {
     private Container $container;
-
     /**
      * @param array<string> $controllers
      */
@@ -18,23 +16,21 @@ class Router extends RegisterRouter
     ) {
 
         parent::__construct($controllers);
-
         $this->container = new Container();
     }
 
-    public function handle(Request $request): void
+    public function handle(?Request $request = null): void
     {
-        $uri    = $request->getPathInfo();
-        $method = $request->getMethod();
 
-        $routes = $this->getRoutes();
+        $request = $request ?? Request::capture();
+        $routes  = $this->getRoutes();
 
-        if(!isset($routes[$method])) {
+        if(!isset($routes[$request->getMethod()])) {
             throw new RouterException('Route not found', 404);
         }
 
-        foreach ($routes[$method] as $key => $route) {
-            if ($this->matchRoute($key, $uri, $params)) {
+        foreach ($routes[$request->getMethod()] as $key => $route) {
+            if ($this->matchRoute($key, $request->uri(), $params)) {
                 $this->makeInstance($route['controller'], $route['actions'], $params);
 
                 return;
