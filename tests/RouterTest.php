@@ -3,10 +3,8 @@
 namespace Jmarcos16\MiniRouter\Tests;
 
 use Jmarcos16\MiniRouter\Attribute\Route;
-use Jmarcos16\MiniRouter\Request as MiniRouterRequest;
-use Jmarcos16\MiniRouter\Router;
+use Jmarcos16\MiniRouter\{Request as MiniRouterRequest, Router};
 use PHPUnit\Framework\TestCase as FrameworkTestCase;
-use Symfony\Component\HttpFoundation\Request;
 
 class RouterTest extends FrameworkTestCase
 {
@@ -19,7 +17,7 @@ class RouterTest extends FrameworkTestCase
                 echo 'Hello from TestController in default route';
             }
         };
-        
+
         $router = new Router([$controller::class]);
         $router->handle(MiniRouterRequest::create('/default-route', 'POST'));
         $this->expectOutputString('Hello from TestController in default route');
@@ -34,12 +32,12 @@ class RouterTest extends FrameworkTestCase
                 echo 'Hello from TestController in default route';
             }
         };
-        
+
         $router = new Router([$controller::class]);
         $this->expectExceptionMessage('Route not found');
         $router->handle(MiniRouterRequest::create('/not-found-route', 'POST'));
     }
-    
+
     public function testItShouldThrowExceptionWhenRouteNotFoundAndMethodIsNotDefined(): void
     {
         $controller = new class () {
@@ -49,7 +47,7 @@ class RouterTest extends FrameworkTestCase
                 echo 'Hello from TestController in default route';
             }
         };
-        
+
         $router = new Router([$controller::class]);
         $this->expectExceptionMessage('Route not found');
         $router->handle(MiniRouterRequest::create('/default-route', 'GET'));

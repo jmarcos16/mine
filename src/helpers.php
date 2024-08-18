@@ -22,12 +22,13 @@ if(!function_exists('dd')) {
     {
 
         $trace = debug_backtrace();
-        $file = $trace[0]['file'];
-        $line = $trace[0]['line'];
+        $file  = $trace[0]['file'];
+        $line  = $trace[0]['line'];
 
         echo "File: $file" . PHP_EOL;
         echo "Line: $line" . PHP_EOL;
         var_dump(...$params);
+
         die();
     }
 }

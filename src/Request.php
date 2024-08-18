@@ -1,11 +1,11 @@
 <?php
+
 namespace Jmarcos16\MiniRouter;
 
 use Symfony\Component\HttpFoundation\Request as HttpFoundationRequest;
 
-class Request extends HttpFoundationRequest
+final class Request extends HttpFoundationRequest
 {
-
     /**
      * Create a new request instance.
      *
@@ -34,7 +34,7 @@ class Request extends HttpFoundationRequest
     /**
      * Get all the input data.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function all(): array
     {
@@ -83,7 +83,7 @@ class Request extends HttpFoundationRequest
 
     /**
      * Return the request instance.
-     * 
+     *
      * @return Request
      */
     public function instance(): Request
@@ -104,13 +104,12 @@ class Request extends HttpFoundationRequest
     /**
      * Return all the input data.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {
         return $this->all();
     }
-
 
     /**
      * Create a new request instance from the base request.
@@ -122,7 +121,7 @@ class Request extends HttpFoundationRequest
     {
         $instance = new static(
             $request->query->all(), $request->request->all(), $request->attributes->all(),
-            $request->cookies->all(), (new static)->filterFiles($request->files->all()) ?? [], $request->server->all()
+            $request->cookies->all(), (new static())->filterFiles($request->files->all()) ?? [], $request->server->all()
         );
 
         $instance->content = $request->content;
@@ -139,7 +138,7 @@ class Request extends HttpFoundationRequest
      */
     protected function filterFiles($files)
     {
-        if (! $files) {
+        if (!$files) {
             return;
         }
 
@@ -155,6 +154,5 @@ class Request extends HttpFoundationRequest
 
         return $files;
     }
-
 
 }
