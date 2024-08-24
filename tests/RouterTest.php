@@ -44,10 +44,9 @@ class RouterTest extends FrameworkTestCase
             #[Route(uri: '/default-route', methods: ['POST'])]
             public function defaultRoute(): void
             {
-                echo 'Hello from TestController in default route';
+                echo 'Hello from TetsController in default route';
             }
         };
-
         $router = new Router([$controller::class]);
         $this->expectExceptionMessage('Route not found');
         $router->handle(MiniRouterRequest::create('/default-route', 'GET'));
