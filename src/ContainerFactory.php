@@ -8,51 +8,61 @@ class ContainerFactory
 {
     /**
      * Instance of Controller and resolve dependencies
-     * 
+     *
      * @param array<string> $callable
      * @param array <mixed> $params
-     * 
+     *
      * @return mixed
      */
     public function call(array $callable, array $params = []): mixed
     {
-        $callable = $this->resolve($callable, $params);
+        $parameters = $this->resolve($callable, $params);
 
-
-        return call_user_func_array($callable, $params);
+        return call_user_func_array([new $callable['controller'](), $callable['action']], $parameters);
     }
 
     /**
      * Resolve dependencies
-     * 
+     *
      * @param array<string> $callable
      * @param array <mixed> $params
-     * 
+     *
      * @return array<string>
      */
     private function resolve(array $callable, array $params = []): array
     {
-
-        if (!method_exists($callable[0], $callable[1])) {
+        if (!method_exists($callable['controller'], $callable['action'])) {
             throw new RouterException('Action not found', 404);
         }
 
-        $reflection = new \ReflectionMethod($callable[0], $callable[1]);
+        $reflection = new \ReflectionMethod($callable['controller'], $callable['action']);
         $parameters = [];
 
         foreach ($reflection->getParameters() as $index => $parameter) {
+            /** @var \ReflectionNamedType|null $dependency */
             $dependency = $parameter->getType();
-
-            if ($dependency instanceof \ReflectionNamedType && !$dependency->isBuiltin()) {
-                $parameters[] = $parameter->getClass()->getName();
+            
+            if ($dependency) {
+                $dependency   = $dependency->getName();
+                $parameters[] = new $dependency();
             } else {
-                // TODO: add the params in the correct request
-                $parameters[] = array_shift($params);
+                $parameters[] = $params[$index] ?? null;
             }
         }
 
         return $parameters;
     }
 
-
+    /**
+     * Instance class and call method
+     *
+     * @param array<string> $callable
+     * @param array <mixed> $params
+     *
+     * @return mixed
+     */
+    public static function make(array $callable, array $params = []): mixed
+    {
+        return (new self())->call($callable, $params);
+    }
 }
