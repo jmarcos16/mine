@@ -41,7 +41,7 @@ class ContainerFactory
         foreach ($reflection->getParameters() as $index => $parameter) {
             /** @var \ReflectionNamedType|null $dependency */
             $dependency = $parameter->getType();
-            
+
             if ($dependency) {
                 $dependency   = $dependency->getName();
                 $parameters[] = new $dependency();
