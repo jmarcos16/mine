@@ -2,24 +2,20 @@
 
 namespace Jmarcos16\MiniRouter;
 
-use DI\Container;
 use Jmarcos16\MiniRouter\Exceptions\RouterException;
 
 class Router extends RegisterRouter
 {
-    private Container $container;
     /**
      * @param array<string> $controllers
      */
     public function __construct(
         array $controllers
     ) {
-
         parent::__construct($controllers);
-        $this->container = new Container();
     }
 
-    public function handle(?Request $request = null): void
+    public function handle(?Request $request = null): mixed
     {
 
         $request = $request ?? Request::capture();
@@ -31,41 +27,14 @@ class Router extends RegisterRouter
 
         foreach ($routes[$request->getMethod()] as $key => $route) {
             if ($this->matchRoute($key, $request->uri(), $params)) {
-                $this->makeInstance($route['controller'], $route['actions'], $params);
-
-                return;
+                return ContainerFactory::make([
+                    'controller' => $route['controller'],
+                    'action'     => $route['actions'],
+                ], $params);
             }
         }
 
         throw new RouterException('Route not found', 404);
-    }
-
-    /**
-     * @param string $controller
-     * @param string $actions
-     * @param array<mixed> $params
-     */
-    private function makeInstance(string $controller, string $actions, array $params): void
-    {
-        if (!method_exists($controller, $actions)) {
-            throw new RouterException('Action not found', 404);
-        }
-
-        $reflection = new \ReflectionMethod($controller, $actions);
-        $parameters = [];
-
-        foreach ($reflection->getParameters() as $index => $parameter) {
-            $dependency = $parameter->getType();
-
-            if ($dependency instanceof \ReflectionNamedType && !$dependency->isBuiltin()) {
-                $parameters[] = $this->container->get($dependency->getName());
-            } else {
-                // TODO: add the params in the correct request
-                $parameters[] = array_shift($params);
-            }
-        }
-
-        $this->container->call([$controller, $actions], array_merge($parameters));
     }
 
     /**
